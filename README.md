@@ -15,5 +15,6 @@ Follow the following steps to get the output in the terminal of your labtop:
 Open `.env` and paste your key for the model you wish to use (Google, Anthropic, or OpenAI).
 
 4. Run the CLI
-python cli.py "A Non-disclosure agreement for 12 months..." --model gemini
+
+   python cli.py "A Non-disclosure agreement for 12 months..." --model gemini
 
