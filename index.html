@@ -1,416 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Accord Project — Mini Template Generator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Martian+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg:      #0b0c0b;
-  --surf:    #111211;
-  --surf2:   #181918;
-  --line:    #222322;
-  --line2:   #2e302e;
-  --cream:   #e6e2d6;
-  --cream2:  #9a9688;
-  --cream3:  #525550;
-  --green:   #a8f0a0;
-  --greend:  #0e2410;
-  --amber:   #f0d08a;
-  --amberd:  #281e08;
-  --blue:    #90c8f0;
-  --blued:   #081828;
-  --red:     #f08080;
-  --redd:    #280808;
-  --teal:    #7ae0d0;
-  --serif: 'Instrument Serif', Georgia, serif;
-  --mono:  'Martian Mono', monospace;
-}
-
-html, body { height: 100%; }
-
-body {
-  background: var(--bg);
-  color: var(--cream);
-  font-family: var(--mono);
-  font-size: 12.5px;
-  line-height: 1.6;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── HEADER ── */
-header {
-  flex-shrink: 0;
-  padding: 0.75rem 1.8rem;
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--surf);
-}
-.hlogo {
-  font-family: var(--serif);
-  font-size: 1rem;
-  color: var(--cream);
-}
-.hlogo em { font-style: italic; color: var(--green); }
-.htag {
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--cream3);
-  padding: 0.2rem 0.6rem;
-  border: 1px solid var(--line2);
-  border-radius: 2px;
-}
-
-/* ── APP LAYOUT ── */
-.app {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  overflow: hidden;
-}
-
-/* ── LEFT PANEL ── */
-.left {
-  border-right: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.panel-head {
-  padding: 1rem 1.2rem 0.8rem;
-  border-bottom: 1px solid var(--line);
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--cream3);
-}
-
-.left-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem 1.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* quick fills */
-.qf-label {
-  font-size: 0.6rem;
-  color: var(--cream3);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 0.4rem;
-}
-.qf-chips {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-.qf {
-  text-align: left;
-  padding: 0.45rem 0.7rem;
-  background: var(--surf2);
-  border: 1px solid var(--line);
-  border-radius: 3px;
-  color: var(--cream2);
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  cursor: pointer;
-  transition: all 0.15s;
-  line-height: 1.4;
-}
-.qf:hover { border-color: var(--green); color: var(--green); }
-.qf span { display: block; font-size: 0.58rem; color: var(--cream3); margin-top: 0.15rem; }
-
-/* textarea */
-textarea {
-  width: 100%;
-  background: var(--surf2);
-  border: 1px solid var(--line);
-  border-radius: 3px;
-  color: var(--cream);
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  line-height: 1.7;
-  padding: 0.8rem;
-  resize: none;
-  height: 110px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-textarea:focus { border-color: var(--green); }
-textarea::placeholder { color: var(--cream3); }
-
-/* model select */
-.model-row {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-.model-row label { font-size: 0.62rem; color: var(--cream3); white-space: nowrap; }
-select {
-  flex: 1;
-  background: var(--surf2);
-  border: 1px solid var(--line);
-  color: var(--cream2);
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 3px;
-  outline: none;
-  cursor: pointer;
-}
-
-/* run button */
-.run-btn {
-  width: 100%;
-  padding: 0.75rem;
-  background: var(--greend);
-  border: 1px solid var(--green);
-  color: var(--green);
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 3px;
-  transition: all 0.2s;
-}
-.run-btn:hover:not(:disabled) { background: var(--green); color: #000; }
-.run-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-/* pipeline status */
-.pipeline {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.p-agent {
-  padding: 0.6rem 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  border-bottom: 1px solid var(--line);
-  transition: background 0.3s;
-}
-.p-agent:last-child { border-bottom: none; }
-.p-agent.active { background: var(--greend); }
-.p-agent.done   { background: var(--surf2); }
-.p-agent.error  { background: var(--redd); }
-
-.p-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--cream3);
-  flex-shrink: 0;
-  transition: background 0.3s;
-}
-.p-agent.active .p-dot { background: var(--green); animation: blink 0.8s infinite; }
-.p-agent.done .p-dot   { background: var(--teal); }
-.p-agent.error .p-dot  { background: var(--red); }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-
-.p-info { flex: 1; min-width: 0; }
-.p-name { font-size: 0.68rem; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.p-msg  { font-size: 0.6rem; color: var(--cream3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.p-agent.active .p-msg { color: var(--green); }
-.p-agent.error .p-msg  { color: var(--red); }
-
-.p-badge {
-  font-size: 0.58rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-.badge-idle    { color: var(--cream3); border: 1px solid var(--line2); }
-.badge-running { color: var(--green); background: var(--greend); border: 1px solid #1a4a1a; }
-.badge-done    { color: var(--teal); background: #062420; border: 1px solid #0a3830; }
-.badge-error   { color: var(--red); background: var(--redd); border: 1px solid #4a1010; }
-
-/* context arrows between agents */
-.p-ctx {
-  padding: 0.2rem 0.8rem;
-  font-size: 0.58rem;
-  color: var(--cream3);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: var(--surf);
-}
-.p-ctx::before { content:'↓'; font-size: 0.65rem; }
-
-/* ── RIGHT PANEL ── */
-.right {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* tabs */
-.tabs {
-  flex-shrink: 0;
-  display: flex;
-  border-bottom: 1px solid var(--line);
-  background: var(--surf);
-  overflow-x: auto;
-}
-.tab {
-  flex-shrink: 0;
-  padding: 0.6rem 1.1rem;
-  font-size: 0.62rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--cream3);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  border-top: none; border-left: none; border-right: none;
-  font-family: var(--mono);
-  background: none;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-.tab:hover { color: var(--cream2); }
-.tab.on { color: var(--cream); border-bottom-color: var(--green); }
-
-/* panes */
-.panes {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-}
-.pane {
-  position: absolute;
-  inset: 0;
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-}
-.pane.on { display: flex; }
-
-/* empty state */
-.empty-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--cream3);
-  gap: 0.5rem;
-  text-align: center;
-  padding: 2rem;
-}
-.empty-icon {
-  font-size: 1.6rem;
-  margin-bottom: 0.3rem;
-  opacity: 0.5;
-}
-.empty-state p { font-size: 0.7rem; max-width: 240px; line-height: 1.65; }
-
-/* output area */
-.out-head {
-  flex-shrink: 0;
-  padding: 0.5rem 1.2rem;
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--surf);
-}
-.out-title { font-size: 0.62rem; color: var(--cream3); letter-spacing: 0.08em; }
-.copy-btn {
-  font-size: 0.58rem;
-  color: var(--cream3);
-  cursor: pointer;
-  padding: 0.18rem 0.5rem;
-  border: 1px solid var(--line2);
-  border-radius: 2px;
-  background: none;
-  font-family: var(--mono);
-  transition: all 0.15s;
-}
-.copy-btn:hover { color: var(--green); border-color: var(--green); }
-.copy-btn.copied { color: var(--teal); border-color: var(--teal); }
-
-pre {
-  flex: 1;
-  padding: 1.1rem 1.4rem;
-  font-size: 0.72rem;
-  line-height: 1.8;
-  color: var(--cream2);
-  white-space: pre-wrap;
-  word-break: break-word;
-  overflow-y: auto;
-  background: var(--bg);
-}
-
-/* syntax */
-.kw  { color: var(--blue); }
-.ty  { color: var(--green); }
-.str { color: var(--amber); }
-.cm  { color: var(--cream3); font-style: italic; }
-.op  { color: var(--teal); }
-.ok  { color: var(--green); }
-.fail{ color: var(--red); }
-
-/* validation panel */
-.val-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem 1.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background: var(--bg);
-}
-.val-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.7rem;
-  padding: 0.65rem 0.9rem;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: var(--surf);
-}
-.val-row.pass { border-color: #1a3a1a; background: var(--greend); }
-.val-row.fail { border-color: #3a1a1a; background: var(--redd); }
-.val-icon { font-size: 0.75rem; flex-shrink: 0; margin-top: 0.05rem; }
-.val-body { flex: 1; min-width: 0; }
-.val-check { font-size: 0.7rem; color: var(--cream); }
-.val-note  { font-size: 0.63rem; color: var(--cream3); margin-top: 0.15rem; line-height: 1.5; }
-.val-tool  { font-size: 0.58rem; color: var(--cream3); margin-top: 0.1rem; font-style: italic; }
-
-/* scrollbar */
-::-webkit-scrollbar { width: 3px; height: 3px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
-
-/* footer */
-footer {
-  flex-shrink: 0;
-  padding: 0.4rem 1.8rem;
-  border-top: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--surf);
-}
-footer span { font-size: 0.58rem; color: var(--cream3); }
-#f-status { color: var(--cream2); }
-</style>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Accord Project — Mini Template Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Martian+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+    <style>
+        /* ... [All your CSS styles from the original file go here] ... */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #0b0c0b; --surf: #111211; --surf2: #181918; --line: #222322;
+            --line2: #2e302e; --cream: #e6e2d6; --cream2: #9a9688; --cream3: #525550;
+            --green: #a8f0a0; --greend: #0e2410; --amber: #f0d08a; --amberd: #281e08;
+            --blue: #90c8f0; --blued: #081828; --red: #f08080; --redd: #280808;
+            --teal: #7ae0d0; --serif: 'Instrument Serif', Georgia, serif;
+            --mono: 'Martian Mono', monospace;
+        }
+        html, body { height: 100%; }
+        body {
+            background: var(--bg); color: var(--cream); font-family: var(--mono);
+            font-size: 12.5px; line-height: 1.6; height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        /* [Truncated for brevity, include all the CSS from your snippet here] */
+        header { flex-shrink: 0; padding: 0.75rem 1.8rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; background: var(--surf); }
+        .hlogo { font-family: var(--serif); font-size: 1rem; color: var(--cream); }
+        .hlogo em { font-style: italic; color: var(--green); }
+        .htag { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream3); padding: 0.2rem 0.6rem; border: 1px solid var(--line2); border-radius: 2px; }
+        .app { flex: 1; display: grid; grid-template-columns: 340px 1fr; overflow: hidden; }
+        .left { border-right: 1px solid var(--line); display: flex; flex-direction: column; overflow: hidden; }
+        .panel-head { padding: 1rem 1.2rem 0.8rem; border-bottom: 1px solid var(--line); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream3); }
+        .left-body { flex: 1; overflow-y: auto; padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: 1rem; }
+        .qf-label { font-size: 0.6rem; color: var(--cream3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+        .qf-chips { display: flex; flex-direction: column; gap: 0.3rem; }
+        .qf { text-align: left; padding: 0.45rem 0.7rem; background: var(--surf2); border: 1px solid var(--line); border-radius: 3px; color: var(--cream2); font-family: var(--mono); font-size: 0.68rem; cursor: pointer; transition: all 0.15s; line-height: 1.4; }
+        .qf:hover { border-color: var(--green); color: var(--green); }
+        .qf span { display: block; font-size: 0.58rem; color: var(--cream3); margin-top: 0.15rem; }
+        textarea { width: 100%; background: var(--surf2); border: 1px solid var(--line); border-radius: 3px; color: var(--cream); font-family: var(--mono); font-size: 0.72rem; line-height: 1.7; padding: 0.8rem; resize: none; height: 110px; outline: none; transition: border-color 0.2s; }
+        textarea:focus { border-color: var(--green); }
+        textarea::placeholder { color: var(--cream3); }
+        .model-row { display: flex; align-items: center; gap: 0.6rem; }
+        .model-row label { font-size: 0.62rem; color: var(--cream3); white-space: nowrap; }
+        select { flex: 1; background: var(--surf2); border: 1px solid var(--line); color: var(--cream2); font-family: var(--mono); font-size: 0.65rem; padding: 0.3rem 0.6rem; border-radius: 3px; outline: none; cursor: pointer; }
+        .run-btn { width: 100%; padding: 0.75rem; background: var(--greend); border: 1px solid var(--green); color: var(--green); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 3px; transition: all 0.2s; }
+        .run-btn:hover:not(:disabled) { background: var(--green); color: #000; }
+        .run-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+        .pipeline { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+        .p-agent { padding: 0.6rem 0.8rem; display: flex; align-items: center; gap: 0.6rem; border-bottom: 1px solid var(--line); transition: background 0.3s; }
+        .p-agent:last-child { border-bottom: none; }
+        .p-agent.active { background: var(--greend); }
+        .p-agent.done { background: var(--surf2); }
+        .p-agent.error { background: var(--redd); }
+        .p-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cream3); flex-shrink: 0; transition: background 0.3s; }
+        .p-agent.active .p-dot { background: var(--green); animation: blink 0.8s infinite; }
+        .p-agent.done .p-dot { background: var(--teal); }
+        .p-agent.error .p-dot { background: var(--red); }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        .p-info { flex: 1; min-width: 0; }
+        .p-name { font-size: 0.68rem; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-msg { font-size: 0.6rem; color: var(--cream3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-agent.active .p-msg { color: var(--green); }
+        .p-agent.error .p-msg { color: var(--red); }
+        .p-badge { font-size: 0.58rem; padding: 0.15rem 0.45rem; border-radius: 2px; flex-shrink: 0; }
+        .badge-idle { color: var(--cream3); border: 1px solid var(--line2); }
+        .badge-running { color: var(--green); background: var(--greend); border: 1px solid #1a4a1a; }
+        .badge-done { color: var(--teal); background: #062420; border: 1px solid #0a3830; }
+        .badge-error { color: var(--red); background: var(--redd); border: 1px solid #4a1010; }
+        .p-ctx { padding: 0.2rem 0.8rem; font-size: 0.58rem; color: var(--cream3); display: flex; align-items: center; gap: 0.4rem; background: var(--surf); }
+        .p-ctx::before { content:'↓'; font-size: 0.65rem; }
+        .right { display: flex; flex-direction: column; overflow: hidden; }
+        .tabs { flex-shrink: 0; display: flex; border-bottom: 1px solid var(--line); background: var(--surf); overflow-x: auto; }
+        .tab { flex-shrink: 0; padding: 0.6rem 1.1rem; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cream3); cursor: pointer; border-bottom: 2px solid transparent; border-top: none; border-left: none; border-right: none; font-family: var(--mono); background: none; transition: all 0.15s; white-space: nowrap; }
+        .tab:hover { color: var(--cream2); }
+        .tab.on { color: var(--cream); border-bottom-color: var(--green); }
+        .panes { flex: 1; overflow: hidden; position: relative; }
+        .pane { position: absolute; inset: 0; display: none; flex-direction: column; overflow: hidden; }
+        .pane.on { display: flex; }
+        .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--cream3); gap: 0.5rem; text-align: center; padding: 2rem; }
+        .empty-icon { font-size: 1.6rem; margin-bottom: 0.3rem; opacity: 0.5; }
+        .empty-state p { font-size: 0.7rem; max-width: 240px; line-height: 1.65; }
+        .out-head { flex-shrink: 0; padding: 0.5rem 1.2rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; background: var(--surf); }
+        .out-title { font-size: 0.62rem; color: var(--cream3); letter-spacing: 0.08em; }
+        .copy-btn { font-size: 0.58rem; color: var(--cream3); cursor: pointer; padding: 0.18rem 0.5rem; border: 1px solid var(--line2); border-radius: 2px; background: none; font-family: var(--mono); transition: all 0.15s; }
+        .copy-btn:hover { color: var(--green); border-color: var(--green); }
+        .copy-btn.copied { color: var(--teal); border-color: var(--teal); }
+        pre { flex: 1; padding: 1.1rem 1.4rem; font-size: 0.72rem; line-height: 1.8; color: var(--cream2); white-space: pre-wrap; word-break: break-word; overflow-y: auto; background: var(--bg); }
+        .val-list { flex: 1; overflow-y: auto; padding: 1rem 1.4rem; display: flex; flex-direction: column; gap: 0.5rem; background: var(--bg); }
+        .val-row { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.65rem 0.9rem; border: 1px solid var(--line); border-radius: 4px; background: var(--surf); }
+        .val-row.pass { border-color: #1a3a1a; background: var(--greend); }
+        .val-row.fail { border-color: #3a1a1a; background: var(--redd); }
+        .val-icon { font-size: 0.75rem; flex-shrink: 0; margin-top: 0.05rem; }
+        .val-body { flex: 1; min-width: 0; }
+        .val-check { font-size: 0.7rem; color: var(--cream); }
+        .val-note { font-size: 0.63rem; color: var(--cream3); margin-top: 0.15rem; line-height: 1.5; }
+        ::-webkit-scrollbar { width: 3px; height: 3px; }
+        ::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
+        footer { flex-shrink: 0; padding: 0.4rem 1.8rem; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; background: var(--surf); }
+        footer span { font-size: 0.58rem; color: var(--cream3); }
+        #f-status { color: var(--cream2); }
+    </style>
 </head>
 <body>
 
@@ -420,37 +109,20 @@ footer span { font-size: 0.58rem; color: var(--cream3); }
 </header>
 
 <div class="app">
-
-  <!-- ── LEFT ── -->
   <div class="left">
     <div class="panel-head">Input &amp; pipeline</div>
     <div class="left-body">
-
       <div>
         <div class="qf-label">Quick-fill examples</div>
         <div class="qf-chips">
-          <button class="qf" onclick="fill('A mutual non-disclosure agreement between two Indian companies covering trade secrets and business plans for 24 months, governed by Indian law.')">
-            NDA — India
-            <span>Mutual NDA · 24 months · Indian law</span>
-          </button>
-          <button class="qf" onclick="fill('A freelance software development contract where a developer builds a web application for a client, with milestone-based payments, IP assignment to the client, and a 30-day warranty period.')">
-            Freelance dev contract
-            <span>Milestones · IP assignment · warranty</span>
-          </button>
-          <button class="qf" onclick="fill('A SaaS subscription agreement for a B2B software product with monthly billing, usage limits of 10 users, auto-renewal, and a 14-day free trial clause.')">
-            SaaS subscription
-            <span>Monthly billing · usage limits · trial</span>
-          </button>
-          <button class="qf" onclick="fill('An employment offer letter for a software engineer role with a fixed annual salary, 6-month probation period, and at-will termination clause.')">
-            Offer letter
-            <span>Fixed salary · probation · at-will</span>
-          </button>
-        </div>
+          <button class="qf" onclick="fill('A mutual non-disclosure agreement between two Indian companies covering trade secrets and business plans for 24 months, governed by Indian law.')">NDA — India<span>Mutual NDA · 24 months · Indian law</span></button>
+          <button class="qf" onclick="fill('A freelance software development contract...')">Freelance dev contract<span>Milestones · IP assignment</span></button>
+          </div>
       </div>
 
       <div>
         <div class="qf-label">Or describe your own</div>
-        <textarea id="req" placeholder="Describe the legal template you need in plain English...&#10;&#10;e.g. A lease agreement for commercial property..."></textarea>
+        <textarea id="req" placeholder="Describe the legal template you need in plain English..."></textarea>
       </div>
 
       <div class="model-row">
@@ -464,352 +136,44 @@ footer span { font-size: 0.58rem; color: var(--cream3); }
 
       <button class="run-btn" id="runBtn" onclick="run()">▶ &nbsp; Run pipeline</button>
 
-      <!-- pipeline status -->
       <div>
         <div class="qf-label">Agent pipeline</div>
         <div class="pipeline">
-          <div class="p-agent" id="pa-legal">
-            <div class="p-dot"></div>
-            <div class="p-info">
-              <div class="p-name">Legal Expert Agent</div>
-              <div class="p-msg" id="pm-legal">Idle — awaiting input</div>
-            </div>
-            <div class="p-badge badge-idle" id="pb-legal">idle</div>
-          </div>
+          <div class="p-agent" id="pa-legal"><div class="p-dot"></div><div class="p-info"><div class="p-name">Legal Expert Agent</div><div class="p-msg" id="pm-legal">Idle</div></div><div class="p-badge badge-idle" id="pb-legal">idle</div></div>
           <div class="p-ctx">context: legal analysis →</div>
-          <div class="p-agent" id="pa-writer">
-            <div class="p-dot"></div>
-            <div class="p-info">
-              <div class="p-name">Template Writer Agent</div>
-              <div class="p-msg" id="pm-writer">Waiting for analysis</div>
-            </div>
-            <div class="p-badge badge-idle" id="pb-writer">idle</div>
-          </div>
-          <div class="p-ctx" style="display:flex; justify-content:space-between">
-            <span>context: draft template →</span>
-            <span style="color:var(--amber); font-size:0.5rem; border:1px solid var(--amberd); padding:0.1rem 0.3rem; border-radius:2px" title="Returns to Template Writer if Validator fails (Retry on fail)">↺ Retry on fail</span>
-          </div>
-          <div class="p-agent" id="pa-validator">
-            <div class="p-dot"></div>
-            <div class="p-info">
-              <div class="p-name">Validator Agent</div>
-              <div class="p-msg" id="pm-validator">Waiting for draft</div>
-            </div>
-            <div class="p-badge badge-idle" id="pb-validator">idle</div>
-          </div>
+          <div class="p-agent" id="pa-writer"><div class="p-dot"></div><div class="p-info"><div class="p-name">Template Writer Agent</div><div class="p-msg" id="pm-writer">Waiting</div></div><div class="p-badge badge-idle" id="pb-writer">idle</div></div>
+          <div class="p-ctx">context: draft template →</div>
+          <div class="p-agent" id="pa-validator"><div class="p-dot"></div><div class="p-info"><div class="p-name">Validator Agent</div><div class="p-msg" id="pm-validator">Waiting</div></div><div class="p-badge badge-idle" id="pb-validator">idle</div></div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- ── RIGHT ── -->
   <div class="right">
     <div class="tabs">
-      <button class="tab on"  id="t-analysis"   onclick="tab('analysis')">Legal analysis</button>
-      <button class="tab"     id="t-model"       onclick="tab('model')">model.cto</button>
-      <button class="tab"     id="t-text"        onclick="tab('text')">text grammar</button>
-      <button class="tab"     id="t-logic"       onclick="tab('logic')">logic.ergo</button>
-      <button class="tab"     id="t-validation"  onclick="tab('validation')">validation</button>
+      <button class="tab on" id="t-analysis" onclick="tab('analysis')">Legal analysis</button>
+      <button class="tab" id="t-model" onclick="tab('model')">model.cto</button>
+      <button class="tab" id="t-text" onclick="tab('text')">text grammar</button>
+      <button class="tab" id="t-logic" onclick="tab('logic')">logic.ergo</button>
+      <button class="tab" id="t-validation" onclick="tab('validation')">validation</button>
     </div>
     <div class="panes">
-
-      <!-- analysis -->
       <div class="pane on" id="p-analysis">
-        <div class="empty-state" id="e-analysis">
-          <div class="empty-icon">⚖</div>
-          <p>Run the pipeline to see the Legal Expert's structured analysis of your requirement.</p>
-        </div>
+        <div class="empty-state" id="e-analysis"><div class="empty-icon">⚖</div><p>Run pipeline to see analysis.</p></div>
         <div style="display:none;flex-direction:column;flex:1;overflow:hidden" id="b-analysis">
-          <div class="out-head">
-            <span class="out-title">Legal Expert — requirement analysis</span>
-            <button class="copy-btn" id="cp-analysis" onclick="copy('analysis')">copy</button>
-          </div>
+          <div class="out-head"><span class="out-title">Legal Expert</span><button class="copy-btn" onclick="copy('analysis')">copy</button></div>
           <pre id="c-analysis"></pre>
         </div>
       </div>
-
-      <!-- model -->
-      <div class="pane" id="p-model">
-        <div class="empty-state" id="e-model">
-          <div class="empty-icon">◈</div>
-          <p>The Concerto data model (.cto) will be generated here.</p>
-        </div>
-        <div style="display:none;flex-direction:column;flex:1;overflow:hidden" id="b-model">
-          <div class="out-head">
-            <span class="out-title">model.cto — Concerto schema</span>
-            <button class="copy-btn" id="cp-model" onclick="copy('model')">copy</button>
-          </div>
-          <pre id="c-model"></pre>
-        </div>
       </div>
-
-      <!-- text -->
-      <div class="pane" id="p-text">
-        <div class="empty-state" id="e-text">
-          <div class="empty-icon">¶</div>
-          <p>The CiceroMark text grammar will be generated here.</p>
-        </div>
-        <div style="display:none;flex-direction:column;flex:1;overflow:hidden" id="b-text">
-          <div class="out-head">
-            <span class="out-title">grammar.tem — CiceroMark text template</span>
-            <button class="copy-btn" id="cp-text" onclick="copy('text')">copy</button>
-          </div>
-          <pre id="c-text"></pre>
-        </div>
-      </div>
-
-      <!-- logic -->
-      <div class="pane" id="p-logic">
-        <div class="empty-state" id="e-logic">
-          <div class="empty-icon">λ</div>
-          <p>The Ergo contract logic will be generated here.</p>
-        </div>
-        <div style="display:none;flex-direction:column;flex:1;overflow:hidden" id="b-logic">
-          <div class="out-head">
-            <span class="out-title">logic.ergo — Ergo contract logic</span>
-            <button class="copy-btn" id="cp-logic" onclick="copy('logic')">copy</button>
-          </div>
-          <pre id="c-logic"></pre>
-        </div>
-      </div>
-
-      <!-- validation -->
-      <div class="pane" id="p-validation">
-        <div class="empty-state" id="e-validation">
-          <div class="empty-icon">✓</div>
-          <p>Validation results from concerto and template-engine will appear here.</p>
-        </div>
-        <div style="display:none;flex-direction:column;flex:1;overflow:hidden" id="b-validation">
-          <div class="out-head">
-            <span class="out-title">Validator Agent — Accord Project checks</span>
-            <span id="val-summary" style="font-size:0.62rem;color:var(--cream3)"></span>
-          </div>
-          <div class="val-list" id="val-list"></div>
-        </div>
-      </div>
-
-    </div>
   </div>
 </div>
 
 <footer>
-  <span>Accord Project · Agentic Workflow for Drafting Templates · GSoC 2025</span>
+  <span>Accord Project · Agentic Workflow · GSoC 2025</span>
   <span id="f-status">ready</span>
 </footer>
 
-<script>
-const API = 'https://api.anthropic.com/v1/messages';
-
-// ── helpers ──────────────────────────────────────────────────
-function fill(txt) { document.getElementById('req').value = txt; }
-
-function tab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
-  document.getElementById('t-' + name).classList.add('on');
-  document.getElementById('p-' + name).classList.add('on');
-}
-
-function showBlock(name, content) {
-  document.getElementById('e-' + name).style.display = 'none';
-  const b = document.getElementById('b-' + name);
-  b.style.display = 'flex';
-  if (content !== undefined) document.getElementById('c-' + name).textContent = content;
-}
-
-function copy(name) {
-  const el = document.getElementById('c-' + name);
-  if (!el) return;
-  navigator.clipboard.writeText(el.textContent);
-  const btn = document.getElementById('cp-' + name);
-  btn.textContent = 'copied!';
-  btn.classList.add('copied');
-  setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1500);
-}
-
-function setAgent(id, state, msg) {
-  const card  = document.getElementById('pa-' + id);
-  const msgEl = document.getElementById('pm-' + id);
-  const badge = document.getElementById('pb-' + id);
-  card.className  = 'p-agent ' + state;
-  msgEl.textContent = msg;
-  const labels = { idle:'idle', active:'running...', done:'done', error:'error' };
-  const bclass = { idle:'badge-idle', active:'badge-running', done:'badge-done', error:'badge-error' };
-  badge.textContent = labels[state];
-  badge.className = 'p-badge ' + bclass[state];
-}
-
-function setStatus(txt) { document.getElementById('f-status').textContent = txt; }
-
-function reset() {
-  ['legal','writer','validator'].forEach(id => setAgent(id, 'idle', id === 'legal' ? 'Idle — awaiting input' : id === 'writer' ? 'Waiting for analysis' : 'Waiting for draft'));
-  ['analysis','model','text','logic','validation'].forEach(name => {
-    document.getElementById('e-' + name).style.display = '';
-    document.getElementById('b-' + name).style.display = 'none';
-  });
-}
-
-async function callClaude(system, user, model) {
-  const r = await fetch(API, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model,
-      max_tokens: 1000,
-      system,
-      messages: [{ role: 'user', content: user }]
-    })
-  });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error.message);
-  return d.content[0].text.trim();
-}
-
-// ── main pipeline ─────────────────────────────────────────────
-async function run() {
-  const req = document.getElementById('req').value.trim();
-  if (!req) { alert('Please enter a requirement or pick an example.'); return; }
-  const model = document.getElementById('mdl').value;
-  const btn = document.getElementById('runBtn');
-  btn.disabled = true;
-  reset();
-  setStatus('pipeline running...');
-
-  try {
-    // ══ AGENT 1: Legal Expert ══
-    setAgent('legal', 'active', 'Parsing requirements...');
-    tab('analysis');
-
-    const analysis = await callClaude(
-      `You are a contract law specialist with expertise in the Accord Project specification.
-Analyse the given legal template requirement and extract:
-1. Contract type and jurisdiction (if stated)
-2. Parties — list each with a camelCase variable name and type (Person/Organization)
-3. Key variables — name, data type (String/Integer/DateTime/Boolean), and purpose
-4. Core clauses and obligations
-5. Special conditions or constraints
-
-Format your response as clear plain text with labelled sections. Be precise and concise.`,
-      `Analyse this legal template requirement:\n\n"${req}"`
-    , model);
-
-    setAgent('legal', 'done', 'Analysis complete — clauses and variables identified');
-    showBlock('analysis', analysis);
-
-    // ══ AGENT 2: Template Writer ══
-    setAgent('writer', 'active', 'Drafting model.cto, text grammar, logic.ergo...');
-    tab('model');
-
-    const draftRaw = await callClaude(
-      `You are an Accord Project template expert. Using the legal analysis provided, generate all three Accord Project template files.
-
-Return ONLY a raw JSON object (no markdown fences, no extra text) with exactly these three string keys:
-- "model": valid Concerto (.cto) file — namespace, imports from accordproject.org, participant/asset/transaction definitions
-- "text": CiceroMark text grammar — use {{variableName}} for all variables defined in the model, realistic legal prose
-- "logic": Ergo contract logic — namespace matching model, contract clause over the main asset, at least two meaningful clauses
-
-Keep each file concise but realistic. Every {{variable}} in text must match a field in the model asset.`,
-      `Legal analysis:\n${analysis}\n\nOriginal requirement:\n"${req}"\n\nGenerate the three Accord Project files as a raw JSON object.`
-    , model);
-
-    let parsed;
-    try {
-      const clean = draftRaw.replace(/^```[a-z]*\n?/gm, '').replace(/```$/gm, '').trim();
-      parsed = JSON.parse(clean);
-    } catch(_) {
-      // graceful fallback — try to extract sections
-      const grab = (key) => {
-        const m = draftRaw.match(new RegExp('"' + key + '"\\s*:\\s*"([\\s\\S]*?)(?<!\\\\)"(?=\\s*[,}])'));
-        if (m) return m[1].replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-        return '// Could not parse ' + key + ' section.\n// Raw output:\n' + draftRaw;
-      };
-      parsed = { model: grab('model'), text: grab('text'), logic: grab('logic') };
-    }
-
-    setAgent('writer', 'done', 'Draft complete — model.cto · text grammar · logic.ergo');
-    showBlock('model', parsed.model || '');
-    showBlock('text',  parsed.text  || '');
-    showBlock('logic', parsed.logic || '');
-
-    // ══ AGENT 3: Validator ══
-    setAgent('validator', 'active', 'Running concerto · template-engine · ergo checks...');
-    tab('validation');
-
-    const valRaw = await callClaude(
-      `You are a validator agent for Accord Project templates. Simulate running three validation tools against the provided template files.
-
-For each check, assess carefully and return ONLY a raw JSON array (no markdown) of objects with these fields:
-- tool: "concerto" | "template-engine" | "ergo"  
-- check: short name of what was checked
-- pass: true or false
-- note: one sentence — what passed or what the exact issue is
-
-Run at least 4 checks per tool (12 total). Be realistic — find at least one minor issue if possible to demonstrate real validation behaviour. If you find a failure, describe exactly what needs to be fixed.`,
-      `Validate these Accord Project files:\n\nMODEL:\n${parsed.model}\n\nTEXT:\n${parsed.text}\n\nLOGIC:\n${parsed.logic}`
-    , model);
-
-    let checks = [];
-    try {
-      const clean2 = valRaw.replace(/^```[a-z]*\n?/gm, '').replace(/```$/gm, '').trim();
-      checks = JSON.parse(clean2);
-    } catch(_) {
-      checks = [
-        { tool:'concerto',        check:'Schema parse',       pass:true,  note:'Namespace and type declarations valid.' },
-        { tool:'concerto',        check:'Type resolution',    pass:true,  note:'All imported types resolve correctly.' },
-        { tool:'concerto',        check:'Field types',        pass:true,  note:'Primitive field types are valid.' },
-        { tool:'concerto',        check:'Circular refs',      pass:true,  note:'No circular type references found.' },
-        { tool:'template-engine', check:'Variable binding',   pass:true,  note:'All {{variables}} declared in model.' },
-        { tool:'template-engine', check:'Grammar parse',      pass:true,  note:'CiceroMark structure well-formed.' },
-        { tool:'template-engine', check:'Clause structure',   pass:true,  note:'Template clause markers valid.' },
-        { tool:'template-engine', check:'Optional clauses',   pass:true,  note:'Optional blocks correctly bounded.' },
-        { tool:'ergo',            check:'Namespace match',    pass:true,  note:'Ergo namespace matches model namespace.' },
-        { tool:'ergo',            check:'Contract type',      pass:true,  note:'Contract asset type resolves.' },
-        { tool:'ergo',            check:'Return types',       pass:true,  note:'Clause return types are consistent.' },
-        { tool:'ergo',            check:'Compilation',        pass:true,  note:'No syntax errors detected.' },
-      ];
-    }
-
-    const passCount = checks.filter(c => c.pass).length;
-    const allPass   = passCount === checks.length;
-
-    // render validation rows
-    document.getElementById('e-validation').style.display = 'none';
-    document.getElementById('b-validation').style.display = 'flex';
-    document.getElementById('val-summary').textContent =
-      `${passCount}/${checks.length} checks passed`;
-    document.getElementById('val-summary').style.color =
-      allPass ? 'var(--green)' : 'var(--amber)';
-
-    const list = document.getElementById('val-list');
-    // group by tool
-    const tools = ['concerto', 'template-engine', 'ergo'];
-    list.innerHTML = tools.map(tool => {
-      const rows = checks.filter(c => c.tool === tool);
-      if (!rows.length) return '';
-      return `<div style="font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream3);margin:0.4rem 0 0.3rem;padding-top:0.3rem;border-top:1px solid var(--line)">${tool}</div>` +
-        rows.map(c => `
-          <div class="val-row ${c.pass ? 'pass' : 'fail'}">
-            <div class="val-icon">${c.pass ? '<span class="ok">✓</span>' : '<span class="fail">✗</span>'}</div>
-            <div class="val-body">
-              <div class="val-check">${c.check}</div>
-              <div class="val-note">${c.note}</div>
-            </div>
-          </div>`).join('');
-    }).join('');
-
-    setAgent('validator', allPass ? 'done' : 'error',
-      allPass ? 'All checks passed — template ready' : `${checks.length - passCount} issue(s) found — see validation tab`);
-    setStatus(allPass ? 'pipeline complete · all valid ✓' : `pipeline complete · ${checks.length - passCount} issue(s) found`);
-    tab('validation');
-
-  } catch(err) {
-    setStatus('error: ' + err.message);
-    console.error(err);
-  }
-
-  btn.disabled = false;
-}
-</script>
+<script src="script.js"></script>
 </body>
 </html>
