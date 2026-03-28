@@ -77,16 +77,9 @@ function reset() {
     });
 }
 
-// ── MOCK API INTERACTION (SIMULATION) ─────────────────────────
+// ── API INTERACTION (REAL FASTAPI) ─────────────────────────
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-const mockData = {
-    analysis: `LEGAL ANALYSIS SUMMARY\n\n1. Type: Mutual Non-Disclosure Agreement (NDA)\n2. Jurisdiction: India\n3. Duration: 24 months\n4. Key Clauses:\n   - Definition of Confidential Information\n   - Obligations of Receiving Party\n   - Exclusions from Confidentiality\n   - Governing Law & Dispute Resolution\n\nAGENT DECISION: Proceed with drafting Concerto model, markdown template, and Ergo logic.`,
-    model: `namespace org.accordproject.nda\n\nimport org.accordproject.contract.*\nimport org.accordproject.party.Party\n\nasset MutualNDA extends Contract {\n  o Party partyA\n  o Party partyB\n  o Duration duration\n  o String governingLaw\n}`,
-    text: `MUTUAL NON-DISCLOSURE AGREEMENT\n\nThis Agreement is entered into by and between {{partyA}} and {{partyB}}.\n\n1. OBLIGATIONS. Both parties agree to maintain the confidentiality of the proprietary information for a period of {{duration}}.\n\n2. GOVERNING LAW. This agreement shall be governed by the laws of {{governingLaw}}.`,
-    logic: `namespace org.accordproject.nda\n\nimport org.accordproject.cicero.runtime.*\n\ncontract MutualNDALogic over MutualNDA {\n  clause init() : Response {\n    return Response{}\n  }\n}`
-};
+// Removed the sleep and mockData methods. We use the real /api/generate endpoint now.
 
 // ── MAIN PIPELINE ─────────────────────────────────────────────
 
@@ -99,32 +92,44 @@ async function run() {
     btn.disabled = true;
     
     reset();
-    setStatus('pipeline running (' + model + ')...');
+    setStatus('pipeline running (' + model + ')... this takes 30-60s');
 
     try {
-        // ══ AGENT 1: Legal Expert ══
-        setAgent('legal', 'active', 'Parsing requirements...');
+        // Since CrewAI executes synchronously, the UI will show a generic "Pipeline Running..." state across all agents
+        // while waiting for the single API response to return.
+        setAgent('legal', 'active', 'Running CrewAI Pipeline...');
+        setAgent('writer', 'active', 'Running CrewAI Pipeline...');
+        setAgent('validator', 'active', 'Running CrewAI Pipeline...');
         tab('analysis');
         
-        await sleep(1500); // Simulate API latency
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ requirement: req, model: model })
+        });
+        
+        if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.detail || "API Error");
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error);
+        }
+
+        // ══ AGENT 1: Legal Expert ══
         setAgent('legal', 'done', 'Analysis complete');
-        showBlock('analysis', mockData.analysis);
+        showBlock('analysis', data.analysis);
 
         // ══ AGENT 2: Template Writer ══
-        setAgent('writer', 'active', 'Drafting files...');
-        tab('model');
-        
-        await sleep(2000); // Simulate API latency
         setAgent('writer', 'done', 'Draft complete');
-        showBlock('model', mockData.model);
-        showBlock('text',  mockData.text);
-        showBlock('logic', mockData.logic);
+        showBlock('model', data.parsed_model);
+        showBlock('text',  data.parsed_text);
+        showBlock('logic', data.parsed_logic);
 
         // ══ AGENT 3: Validator ══
-        setAgent('validator', 'active', 'Running checks...');
-        tab('validation');
-        
-        await sleep(800);
         showBlock('validation', ''); // Clear initial empty text
         
         const valList = document.getElementById('c-validation');
@@ -137,24 +142,25 @@ async function run() {
             { check: "Test Execution", note: "Sample request executed constraints.", pass: true }
         ];
 
-        for (const c of checks) {
-            await sleep(400); // Step-by-step visual validation
-            const row = document.createElement('div');
-            row.className = `val-row ${c.pass ? 'pass' : 'fail'}`;
-            row.innerHTML = `
-                <div class="val-icon">${c.pass ? '✓' : '✗'}</div>
-                <div class="val-body">
-                    <div class="val-check">${c.check}</div>
-                    <div class="val-note">${c.note}</div>
-                </div>
-            `;
-            valList.appendChild(row);
-        }
+        // We can just append a single block containing actual validation response from LLM
+        const row = document.createElement('div');
+        row.className = `val-row pass`;
+        row.innerHTML = `
+            <div class="val-icon">✓</div>
+            <div class="val-body">
+                <div class="val-check">Final Validation Report</div>
+                <div class="val-note" style="white-space: pre-line;">${data.validation.replace(/</g, "&lt;")}</div>
+            </div>
+        `;
+        valList.appendChild(row);
 
         setAgent('validator', 'done', 'All checks passed');
         setStatus('pipeline complete');
 
     } catch(err) {
+        setAgent('legal', 'error', 'Failed');
+        setAgent('writer', 'error', 'Failed');
+        setAgent('validator', 'error', 'Failed');
         setStatus('error: ' + err.message);
         console.error(err);
     } finally {
