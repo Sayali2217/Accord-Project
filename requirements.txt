@@ -3,3 +3,5 @@ langchain-anthropic
 langchain-openai
 langchain-google-genai
 python-dotenv
+fastapi
+uvicorn
