@@ -13,7 +13,7 @@ class GenerateRequest(BaseModel):
 
 @app.get("/")
 def read_index():
-    return FileResponse("mini.html")
+    return FileResponse("index.html")
     
 @app.get("/script.js")
 def read_script():
